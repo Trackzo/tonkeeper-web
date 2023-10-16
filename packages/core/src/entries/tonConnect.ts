@@ -74,6 +74,7 @@ export type ConnectItemReplyError<T> = {
 
 export interface ConnectRequest {
     manifestUrl: string;
+    manifestData?: DAppManifest;
     items: ConnectItem[];
 }
 

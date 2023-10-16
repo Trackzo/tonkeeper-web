@@ -41,13 +41,9 @@ export function parseTonConnect(options: { url: string }): TonConnectParams | st
     try {
         const { query } = queryString.parseUrl(options.url);
 
-        let protocolVersion: number;
-        if (query.v === '2') {
-            protocolVersion = parseInt(query.v);
-        } else {
-            protocolVersion = 1;
+        if (query.v !== '2') {
+            throw Error(`Unknown protocol version: ${query.v}`);
         }
-
         if (typeof query.id !== 'string') {
             throw Error('missing id ' + options.url);
         }
@@ -55,6 +51,7 @@ export function parseTonConnect(options: { url: string }): TonConnectParams | st
             throw Error('missing payload ' + options.url);
         }
 
+        const protocolVersion = parseInt(query.v);
         const request = JSON.parse(decodeURIComponent(query.r)) as ConnectRequest;
         const clientSessionId = query.id;
         const sessionCrypto = new SessionCrypto();
@@ -92,7 +89,7 @@ export const getTonConnectParams = async (
     };
 };
 
-const getManifestResponse = async (manifestUrl: string) => {
+export const getManifestResponse = async (manifestUrl: string) => {
     try {
         return await fetch(manifestUrl);
     } catch (e) {
@@ -103,7 +100,10 @@ const getManifestResponse = async (manifestUrl: string) => {
     }
 };
 
-export const getManifest = async (request: ConnectRequest) => {
+export const getManifest = async (request: ConnectRequest): Promise<DAppManifest> => {
+    if (request.manifestData) {
+        return request.manifestData;
+    }
     // TODO: get fetch from context
     const response = await getManifestResponse(request.manifestUrl);
 

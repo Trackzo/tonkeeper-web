@@ -8,6 +8,10 @@ import {
 } from '@tonkeeper/core/dist/service/tonConnect/connectService';
 import { TonConnectParams } from '@tonkeeper/core/dist/service/tonConnect/connectionService';
 import { sendEventToBridge } from '@tonkeeper/core/dist/service/tonConnect/httpBridge';
+import {
+    loadingLoginPayload,
+    seeIfTonLogin
+} from '@tonkeeper/core/dist/service/tonConnect/loginService';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRequestNotificationAnalytics } from '../../hooks/amplitude';
@@ -34,12 +38,7 @@ const useGetConnectInfo = () => {
         const transfer = parseTonTransfer({ url });
 
         if (transfer) {
-            sdk.uiEvents.emit('copy', {
-                method: 'copy',
-                id: Date.now(),
-                params: t('loading')
-            });
-
+            sdk.topMessage(t('loading'));
             sdk.uiEvents.emit('transfer', {
                 method: 'transfer',
                 id: Date.now(),
@@ -48,24 +47,26 @@ const useGetConnectInfo = () => {
             return null;
         }
 
+        if (seeIfTonLogin(url)) {
+            try {
+                sdk.topMessage(t('loading'));
+                const params = await loadingLoginPayload(url);
+                return params;
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
         const params = parseTonConnect({ url });
 
         if (typeof params === 'string') {
-            sdk.uiEvents.emit('copy', {
-                method: 'copy',
-                id: Date.now(),
-                params: params
-            });
+            sdk.topMessage(params);
             return null;
         }
 
         // TODO: handle auto connect
 
-        sdk.uiEvents.emit('copy', {
-            method: 'copy',
-            id: Date.now(),
-            params: t('loading')
-        });
+        sdk.topMessage(t('loading'));
 
         return params;
     });
