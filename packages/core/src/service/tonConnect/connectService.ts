@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 import { Address, beginCell, storeStateInit } from 'ton-core';
-import { keyPairFromSeed, mnemonicToPrivateKey, sha256_sync } from 'ton-crypto';
+import { mnemonicToPrivateKey, sha256_sync } from 'ton-crypto';
 import nacl from 'tweetnacl';
 import { IStorage } from '../../Storage';
 import { TonConnectError } from '../../entries/exception';
@@ -70,17 +70,12 @@ export const getTonConnectParams = (
     protocolVersion?: number,
     clientSessionId?: string
 ): TonConnectParams => {
-    const randomBytes = Buffer.from(nacl.randomBytes(32));
-    const keyPair = keyPairFromSeed(randomBytes);
-
+    const sessionCrypto = new SessionCrypto();
     return {
         protocolVersion: protocolVersion ?? 2,
         request,
         clientSessionId: clientSessionId ?? Buffer.from(nacl.randomBytes(32)).toString('hex'),
-        sessionKeyPair: {
-            secretKey: keyPair.secretKey.toString('hex'),
-            publicKey: keyPair.publicKey.toString('hex')
-        }
+        sessionKeyPair: sessionCrypto.stringifyKeypair()
     };
 };
 
