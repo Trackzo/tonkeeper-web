@@ -41,7 +41,7 @@ export const loadingLoginPayload = async (url: string): Promise<TonConnectParams
     const dappUrl = new URL(payload.v1.callback_url).host;
 
     const manifestData: DAppManifest = {
-        url: dappUrl,
+        url: payload.v1.callback_url,
         name: dappUrl,
         iconUrl: payload.v1.image_url
     };
