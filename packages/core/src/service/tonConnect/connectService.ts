@@ -1,11 +1,6 @@
 import queryString from 'query-string';
 import { Address, beginCell, storeStateInit } from 'ton-core';
-import {
-    getSecureRandomBytes,
-    keyPairFromSeed,
-    mnemonicToPrivateKey,
-    sha256_sync
-} from 'ton-crypto';
+import { keyPairFromSeed, mnemonicToPrivateKey, sha256_sync } from 'ton-crypto';
 import nacl from 'tweetnacl';
 import { IStorage } from '../../Storage';
 import { TonConnectError } from '../../entries/exception';
@@ -70,18 +65,18 @@ export function parseTonConnect(options: { url: string }): TonConnectParams | st
     }
 }
 
-export const getTonConnectParams = async (
+export const getTonConnectParams = (
     request: ConnectRequest,
     protocolVersion?: number,
     clientSessionId?: string
-): Promise<TonConnectParams> => {
-    const randomBytes: Buffer = await getSecureRandomBytes(32);
+): TonConnectParams => {
+    const randomBytes = Buffer.from(nacl.randomBytes(32));
     const keyPair = keyPairFromSeed(randomBytes);
 
     return {
         protocolVersion: protocolVersion ?? 2,
         request,
-        clientSessionId: clientSessionId ?? (await getSecureRandomBytes(32)).toString('hex'),
+        clientSessionId: clientSessionId ?? Buffer.from(nacl.randomBytes(32)).toString('hex'),
         sessionKeyPair: {
             secretKey: keyPair.secretKey.toString('hex'),
             publicKey: keyPair.publicKey.toString('hex')

@@ -17,6 +17,7 @@ interface LoginPayload {
         session_payload: string;
     };
 }
+
 export const loadingLoginPayload = async (url: string): Promise<TonConnectParams> => {
     const payloadUrl = `https://${url.slice(36)}`;
 

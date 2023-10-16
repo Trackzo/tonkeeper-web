@@ -1,14 +1,23 @@
-import { ConnectItemReply } from '@tonkeeper/core/dist/entries/tonConnect';
+import {
+    ConnectItemReply,
+    TonConnectTransactionPayload
+} from '@tonkeeper/core/dist/entries/tonConnect';
+import { getTonConnectParams } from '@tonkeeper/core/dist/service/tonConnect/connectService';
+import { TonConnectParams } from '@tonkeeper/core/dist/service/tonConnect/connectionService';
 import { delay } from '@tonkeeper/core/dist/utils/common';
 import { TonConnectNotification } from '@tonkeeper/uikit/dist/components/connect/TonConnectNotification';
 import { TonTransactionNotification } from '@tonkeeper/uikit/dist/components/connect/TonTransactionNotification';
 import { useNotificationAnalytics } from '@tonkeeper/uikit/dist/hooks/amplitude';
 import { useCallback, useEffect, useState } from 'react';
 import { askBackground, sendBackground } from '../event';
-import { NotificationData } from '../libs/event';
+import { NotificationData, NotificationFields } from '../libs/event';
+
+type NotificationPayload =
+    | NotificationFields<'tonConnectRequest', TonConnectParams>
+    | NotificationFields<'tonConnectSend', TonConnectTransactionPayload>;
 
 export const Notifications = () => {
-    const [data, setData] = useState<NotificationData | undefined>(undefined);
+    const [data, setData] = useState<NotificationPayload | undefined>(undefined);
 
     const reloadNotification = useCallback(async (wait = true) => {
         setData(undefined);
@@ -19,8 +28,16 @@ export const Notifications = () => {
             const item = await askBackground<NotificationData | undefined>().message(
                 'getNotification'
             );
-            if (item) {
-                setData(item);
+
+            let payload: NotificationPayload | undefined;
+            if (item?.kind === 'tonConnectRequest') {
+                payload = { ...item, data: getTonConnectParams(item.data) };
+            } else {
+                payload = item;
+            }
+
+            if (payload) {
+                setData(payload);
             } else {
                 sendBackground.message('closePopUp');
             }

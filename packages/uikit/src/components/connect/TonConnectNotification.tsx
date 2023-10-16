@@ -1,20 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AppKey } from '@tonkeeper/core/dist/Keys';
 import { AuthState } from '@tonkeeper/core/dist/entries/password';
-import {
-    ConnectItemReply,
-    ConnectRequest,
-    DAppManifest
-} from '@tonkeeper/core/dist/entries/tonConnect';
+import { ConnectItemReply, DAppManifest } from '@tonkeeper/core/dist/entries/tonConnect';
 import { walletVersionText } from '@tonkeeper/core/dist/entries/wallet';
 import {
     getManifest,
-    getTonConnectParams,
     toTonAddressItemReply,
     toTonProofItemReply,
     tonConnectProofPayload
 } from '@tonkeeper/core/dist/service/tonConnect/connectService';
-import { saveAccountConnection } from '@tonkeeper/core/dist/service/tonConnect/connectionService';
+import {
+    TonConnectParams,
+    saveAccountConnection
+} from '@tonkeeper/core/dist/service/tonConnect/connectionService';
 import { formatAddress, toShortValue } from '@tonkeeper/core/dist/utils/common';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -30,7 +28,7 @@ import { Button } from '../fields/Button';
 import { ResultButton } from '../transfer/common';
 
 const useConnectMutation = (
-    request: ConnectRequest,
+    params: TonConnectParams,
     manifest: DAppManifest,
     webViewUrl?: string
 ) => {
@@ -39,11 +37,9 @@ const useConnectMutation = (
     const client = useQueryClient();
 
     return useMutation<ConnectItemReply[], Error>(async () => {
-        const params = await getTonConnectParams(request);
-
         const result = [] as ConnectItemReply[];
 
-        for (const item of request.items) {
+        for (const item of params.request.items) {
             if (item.name === 'ton_addr') {
                 result.push(toTonAddressItemReply(wallet));
             }
@@ -146,7 +142,7 @@ const getDomain = (url: string) => {
 
 const ConnectContent: FC<{
     origin?: string;
-    params: ConnectRequest;
+    params: TonConnectParams;
     manifest: DAppManifest;
     handleClose: (result?: ConnectItemReply[], manifest?: DAppManifest) => void;
 }> = ({ params, manifest, origin, handleClose }) => {
@@ -215,7 +211,7 @@ const ConnectContent: FC<{
     );
 };
 
-const useManifest = (params: ConnectRequest | null) => {
+const useManifest = (params: TonConnectParams | null) => {
     const sdk = useAppSdk();
     const { t } = useTranslation();
 
@@ -228,7 +224,7 @@ const useManifest = (params: ConnectRequest | null) => {
             });
 
             try {
-                return await getManifest(params!);
+                return await getManifest(params!.request);
             } catch (e) {
                 if (e instanceof Error) {
                     sdk.uiEvents.emit('copy', {
@@ -247,7 +243,7 @@ const useManifest = (params: ConnectRequest | null) => {
 
 export const TonConnectNotification: FC<{
     origin?: string;
-    params: ConnectRequest | null;
+    params: TonConnectParams | null;
     handleClose: (result?: ConnectItemReply[], manifest?: DAppManifest) => void;
 }> = ({ params, origin, handleClose }) => {
     const { data: manifest } = useManifest(params);
