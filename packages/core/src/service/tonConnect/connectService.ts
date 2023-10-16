@@ -41,9 +41,13 @@ export function parseTonConnect(options: { url: string }): TonConnectParams | st
     try {
         const { query } = queryString.parseUrl(options.url);
 
-        if (query.v !== '2') {
-            throw Error(`Unknown protocol version: ${query.v}`);
+        let protocolVersion: number;
+        if (query.v === '2') {
+            protocolVersion = parseInt(query.v);
+        } else {
+            protocolVersion = 1;
         }
+
         if (typeof query.id !== 'string') {
             throw Error('missing id ' + options.url);
         }
@@ -51,7 +55,6 @@ export function parseTonConnect(options: { url: string }): TonConnectParams | st
             throw Error('missing payload ' + options.url);
         }
 
-        const protocolVersion = parseInt(query.v);
         const request = JSON.parse(decodeURIComponent(query.r)) as ConnectRequest;
         const clientSessionId = query.id;
         const sessionCrypto = new SessionCrypto();
