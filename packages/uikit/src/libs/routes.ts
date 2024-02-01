@@ -10,7 +10,8 @@ export enum AppRoute {
 
 export enum ImportRoute {
     import = '/import',
-    create = '/create'
+    create = '/create',
+    signer = '/signer'
 }
 
 export enum SettingsRoute {
