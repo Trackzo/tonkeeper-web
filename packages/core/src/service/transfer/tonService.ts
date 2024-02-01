@@ -1,6 +1,5 @@
 import { Address, Cell, internal, loadStateInit } from '@ton/core';
 import { Maybe } from '@ton/core/dist/utils/maybe';
-import { mnemonicToPrivateKey } from '@ton/crypto';
 import BigNumber from 'bignumber.js';
 import { APIConfig } from '../../entries/apis';
 import { AssetAmount } from '../../entries/crypto/asset/asset-amount';
@@ -23,7 +22,8 @@ import {
     externalMessage,
     getTTL,
     getWalletBalance,
-    getWalletSeqNo
+    getWalletSeqNo,
+    signEstimateMessage
 } from './common';
 
 export type AccountsMap = Map<string, Account>;
@@ -89,18 +89,18 @@ const seeIfTransferBounceable = (account: Account, recipient: TonRecipient) => {
     return account.status === 'active';
 };
 
-const createTonTransfer = (
+const createTonTransfer = async (
     seqno: number,
     walletState: WalletState,
     recipient: TonRecipientData,
     weiAmount: BigNumber,
     isMax: boolean,
-    secretKey: Buffer = Buffer.alloc(64)
+    signer: (buffer: Buffer) => Promise<Buffer>
 ) => {
     const contract = walletContractFromState(walletState);
-    const transfer = contract.createTransfer({
+    const transfer = await contract.createTransferAndSignRequestAsync({
         seqno,
-        secretKey,
+        signer,
         timeout: getTTL(),
         sendMode: isMax
             ? SendMode.CARRY_ALL_REMAINING_BALANCE
@@ -117,18 +117,18 @@ const createTonTransfer = (
     return externalMessage(contract, seqno, transfer).toBoc();
 };
 
-const createTonConnectTransfer = (
+const createTonConnectTransfer = async (
     seqno: number,
     walletState: WalletState,
     accounts: AccountsMap,
     params: TonConnectTransactionPayload,
-    secretKey: Buffer = Buffer.alloc(64)
+    signer: (buffer: Buffer) => Promise<Buffer>
 ) => {
     const contract = walletContractFromState(walletState);
 
-    const transfer = contract.createTransfer({
+    const transfer = await contract.createTransferAndSignRequestAsync({
         seqno,
-        secretKey,
+        signer,
         timeout: getTTL(),
         sendMode: SendMode.PAY_GAS_SEPARATELY + SendMode.IGNORE_ERRORS,
         messages: params.messages.map(item =>
@@ -157,7 +157,14 @@ export const estimateTonTransfer = async (
         checkWalletPositiveBalanceOrDie(wallet);
     }
 
-    const cell = createTonTransfer(seqno, walletState, recipient, weiAmount, isMax);
+    const cell = await createTonTransfer(
+        seqno,
+        walletState,
+        recipient,
+        weiAmount,
+        isMax,
+        signEstimateMessage
+    );
 
     const emulation = await new EmulationApi(api.tonApiV2).emulateMessageToWallet({
         emulateMessageToWalletRequest: { boc: cell.toString('base64') }
@@ -176,7 +183,13 @@ export const estimateTonConnectTransfer = async (
     const [wallet, seqno] = await getWalletBalance(api, walletState);
     checkWalletPositiveBalanceOrDie(wallet);
 
-    const cell = createTonConnectTransfer(seqno, walletState, accounts, params);
+    const cell = await createTonConnectTransfer(
+        seqno,
+        walletState,
+        accounts,
+        params,
+        signEstimateMessage
+    );
 
     return await new EmulationApi(api.tonApiV2).emulateMessageToWallet({
         emulateMessageToWalletRequest: { boc: cell.toString('base64') }
@@ -188,19 +201,12 @@ export const sendTonConnectTransfer = async (
     walletState: WalletState,
     accounts: AccountsMap,
     params: TonConnectTransactionPayload,
-    mnemonic: string[]
+    signer: (buffer: Buffer) => Promise<Buffer>
 ) => {
     await checkServiceTimeOrDie(api);
-    const keyPair = await mnemonicToPrivateKey(mnemonic);
     const seqno = await getWalletSeqNo(api, walletState.active.rawAddress);
 
-    const external = createTonConnectTransfer(
-        seqno,
-        walletState,
-        accounts,
-        params,
-        keyPair.secretKey
-    );
+    const external = await createTonConnectTransfer(seqno, walletState, accounts, params, signer);
 
     const boc = external.toString('base64');
 
@@ -218,10 +224,9 @@ export const sendTonTransfer = async (
     amount: AssetAmount,
     isMax: boolean,
     fee: MessageConsequences,
-    mnemonic: string[]
+    signer: (buffer: Buffer) => Promise<Buffer>
 ) => {
     await checkServiceTimeOrDie(api);
-    const keyPair = await mnemonicToPrivateKey(mnemonic);
 
     const total = new BigNumber(fee.event.extra).multipliedBy(-1).plus(amount.weiAmount);
 
@@ -230,13 +235,13 @@ export const sendTonTransfer = async (
         checkWalletBalanceOrDie(total, wallet);
     }
 
-    const cell = createTonTransfer(
+    const cell = await createTonTransfer(
         seqno,
         walletState,
         recipient,
         amount.weiAmount,
         isMax,
-        keyPair.secretKey
+        signer
     );
 
     await new BlockchainApi(api.tonApiV2).sendBlockchainMessage({
