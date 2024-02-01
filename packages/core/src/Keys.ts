@@ -5,7 +5,7 @@ export enum AppKey {
 
     THEME = 'theme',
 
-    PASSWORD = 'password',
+    GLOBAL_AUTH_STATE = 'password',
     LOCK = 'lock',
     COUNTRY = 'country',
 

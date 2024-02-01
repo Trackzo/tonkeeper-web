@@ -1,6 +1,7 @@
 import { FiatCurrencies } from './fiat';
 import { Language } from './language';
 import { Network } from './network';
+import { AuthState } from './password';
 import { WalletProxy } from './proxy';
 
 export enum WalletVersion {
@@ -42,6 +43,7 @@ export interface WalletVoucher {
 export interface WalletState {
     publicKey: string;
     active: WalletAddress;
+    auth?: AuthState;
 
     name?: string;
 

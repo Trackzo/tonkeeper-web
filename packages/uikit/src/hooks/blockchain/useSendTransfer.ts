@@ -11,11 +11,9 @@ import {
 } from '@tonkeeper/core/dist/entries/send';
 import { sendJettonTransfer } from '@tonkeeper/core/dist/service/transfer/jettonService';
 import { sendTonTransfer } from '@tonkeeper/core/dist/service/transfer/tonService';
-import { sendTronTransfer } from '@tonkeeper/core/dist/service/tron/tronTransferService';
 import { MessageConsequences } from '@tonkeeper/core/dist/tonApiV2';
-import { EstimatePayload } from '@tonkeeper/core/dist/tronApi';
 import { notifyError } from '../../components/transfer/common';
-import { getMnemonic } from '../../state/mnemonic';
+import { getSigner } from '../../state/mnemonic';
 import { useWalletJettonList } from '../../state/wallet';
 import { useTransactionAnalytics } from '../amplitude';
 import { useAppContext, useWalletContext } from '../appContext';
@@ -37,8 +35,8 @@ export function useSendTransfer<T extends Asset>(
     const { data: jettons } = useWalletJettonList();
 
     return useMutation<boolean, Error>(async () => {
-        const mnemonic = await getMnemonic(sdk, wallet.publicKey).catch(() => null);
-        if (mnemonic === null) return false;
+        const signer = await getSigner(sdk, wallet.publicKey).catch(() => null);
+        if (signer === null) return false;
         try {
             if (isTonAsset(amount.asset)) {
                 if (amount.asset.id === TON_ASSET.id) {
@@ -50,7 +48,7 @@ export function useSendTransfer<T extends Asset>(
                         amount,
                         isMax,
                         estimation.payload as MessageConsequences,
-                        mnemonic
+                        signer
                     );
                 } else {
                     track2('send-jetton');
@@ -66,21 +64,22 @@ export function useSendTransfer<T extends Asset>(
                         amount as AssetAmount<TonAsset>,
                         jettonInfo!.walletAddress.address,
                         estimation.payload as MessageConsequences,
-                        mnemonic
+                        signer
                     );
                 }
             } else {
-                track2('send-trc20');
-                await sendTronTransfer(
-                    {
-                        tronApi: api.tronApi,
-                        tron: wallet.tron!,
-                        request: (estimation.payload as EstimatePayload).request
-                    },
-                    {
-                        mnemonic
-                    }
-                );
+                throw new Error('Disable trc 20 transactions');
+                // track2('send-trc20');
+                // await sendTronTransfer(
+                //     {
+                //         tronApi: api.tronApi,
+                //         tron: wallet.tron!,
+                //         request: (estimation.payload as EstimatePayload).request
+                //     },
+                //     {
+                //         mnemonic
+                //     }
+                // );
             }
         } catch (e) {
             await notifyError(client, sdk, t, e);

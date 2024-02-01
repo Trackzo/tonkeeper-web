@@ -19,6 +19,14 @@ export const getWalletState = async (storage: IStorage, publicKey: string) => {
     return state;
 };
 
+export const getWalletStateOrDie = async (storage: IStorage, publicKey: string) => {
+    const state = await getWalletState(storage, publicKey);
+    if (!state) {
+        throw new Error(`Missing wallet state: ${publicKey}`);
+    }
+    return state;
+};
+
 export const setWalletState = (storage: IStorage, state: WalletState) => {
     return storage.set(`${AppKey.WALLET}_${state.publicKey}`, state);
 };

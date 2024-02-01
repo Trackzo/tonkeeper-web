@@ -20,7 +20,7 @@ import { TonRecipientData, TransferEstimation } from '@tonkeeper/core/dist/entri
 import { MessageConsequences } from '@tonkeeper/core/dist/tonApiV2';
 import { useTransactionAnalytics } from '../../../hooks/amplitude';
 import { QueryKey } from '../../../libs/queryKey';
-import { getMnemonic } from '../../../state/mnemonic';
+import { getSigner } from '../../../state/mnemonic';
 import { Image, ImageMock, Info, SendingTitle, Title } from '../Confirm';
 import {
     ConfirmViewContext,
@@ -72,12 +72,12 @@ const useSendNft = (recipient: TonRecipientData, nftItem: NftItem, fee?: Message
     return useMutation<boolean, Error>(async () => {
         if (!fee) return false;
 
-        const mnemonic = await getMnemonic(sdk, wallet.publicKey).catch(() => null);
-        if (mnemonic === null) return false;
+        const signer = await getSigner(sdk, wallet.publicKey).catch(() => null);
+        if (signer === null) return false;
 
         track2('send-nft');
         try {
-            await sendNftTransfer(api, wallet, recipient, nftItem, fee, mnemonic);
+            await sendNftTransfer(api, wallet, recipient, nftItem, fee, signer);
         } catch (e) {
             await notifyError(client, sdk, t, e);
         }

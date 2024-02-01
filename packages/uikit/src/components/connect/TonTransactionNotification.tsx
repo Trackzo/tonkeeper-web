@@ -12,7 +12,7 @@ import { useAppContext, useWalletContext } from '../../hooks/appContext';
 import { useAppSdk } from '../../hooks/appSdk';
 import { useTranslation } from '../../hooks/translation';
 import { QueryKey } from '../../libs/queryKey';
-import { getMnemonic } from '../../state/mnemonic';
+import { getSigner } from '../../state/mnemonic';
 import { CheckmarkCircleIcon } from '../Icon';
 import { Notification, NotificationBlock } from '../Notification';
 import { SkeletonList } from '../Skeleton';
@@ -64,8 +64,8 @@ const useSendMutation = (params: TonConnectTransactionPayload, estimate?: Estima
         if (!accounts) {
             throw new Error('Missing accounts data');
         }
-        const mnemonic = await getMnemonic(sdk, wallet.publicKey);
-        return sendTonConnectTransfer(api, wallet, accounts, params, mnemonic);
+        const signer = await getSigner(sdk, wallet.publicKey);
+        return sendTonConnectTransfer(api, wallet, accounts, params, signer);
     });
 };
 
