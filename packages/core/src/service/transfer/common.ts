@@ -11,10 +11,10 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { mnemonicToPrivateKey, sign } from '@ton/crypto';
-import { WalletContractV3R1 } from '@ton/ton/src/wallets/WalletContractV3R1';
-import { WalletContractV3R2 } from '@ton/ton/src/wallets/WalletContractV3R2';
-import { WalletContractV4 } from '@ton/ton/src/wallets/WalletContractV4';
-import { WalletContractV5 } from '@ton/ton/src/wallets/WalletContractV5';
+import { WalletContractV3R1 } from '@ton/ton/dist/wallets/WalletContractV3R1';
+import { WalletContractV3R2 } from '@ton/ton/dist/wallets/WalletContractV3R2';
+import { WalletContractV4 } from '@ton/ton/dist/wallets/WalletContractV4';
+import { WalletContractV5 } from '@ton/ton/dist/wallets/WalletContractV5';
 import { APIConfig } from '../../entries/apis';
 import { WalletState } from '../../entries/wallet';
 import {
