@@ -6050,9 +6050,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ton/ton@npm:13.9.0":
+"@ton/ton@https://github.com/tonkeeper/ton-lib":
   version: 13.9.0
-  resolution: "@ton/ton@npm:13.9.0"
+  resolution: "@ton/ton@https://github.com/tonkeeper/ton-lib.git#commit=117096738d7ebe00a6594b25cbf61e8f308b6081"
+  dependencies:
+    axios: "npm:^0.25.0"
+    dataloader: "npm:^2.0.0"
+    symbol.inspect: "npm:1.0.1"
+    teslabot: "npm:^1.3.0"
+    zod: "npm:^3.21.4"
+  peerDependencies:
+    ton-core: ">=0.53.0"
+    ton-crypto: ">=3.2.0"
+  checksum: 96620277448da0584274f30956af47ebccd07f06ae7df251159dcf9ffbd0b646560cc4b06fc03d3305df8acbfea03db59a76cefaf868ab234bec7eba3d7dacf7
+  languageName: node
+  linkType: hard
+
+"@ton/ton@https://github.com/tonkeeper/tonkeeper-ton":
+  version: 13.9.1
+  resolution: "@ton/ton@https://github.com/tonkeeper/tonkeeper-ton.git#commit=3d5ad0dfba4084428edc8d31c209a70d9c802cba"
   dependencies:
     axios: "npm:^0.25.0"
     dataloader: "npm:^2.0.0"
@@ -6062,7 +6078,7 @@ __metadata:
   peerDependencies:
     "@ton/core": ">=0.53.0"
     "@ton/crypto": ">=3.2.0"
-  checksum: 7542fd2164d872b6e5473a8db1ab5d11553d3eec868544a5bc5ded80d1973399013aa41b7d691598c5d4f212ec10aec8fcbb1e614e2d7e8f152ba9479e2e8fe0
+  checksum: f2ebaffe5cb73a86f546a02617b75b50d2729c5fdc17ab0d76396017170e602535dc4f254105da09eb31fdd142e2d0a3916eebb5b2be1a9486bfd8cf852c3865
   languageName: node
   linkType: hard
 
@@ -6072,7 +6088,7 @@ __metadata:
   dependencies:
     "@ton/core": "npm:0.54.0"
     "@ton/crypto": "npm:3.2.0"
-    "@ton/ton": "npm:13.9.0"
+    "@ton/ton": "https://github.com/tonkeeper/tonkeeper-ton"
     bignumber.js: "npm:^9.1.1"
     ethers: "npm:^6.6.5"
     npm-run-all: "npm:^4.1.5"
@@ -6153,7 +6169,7 @@ __metadata:
     "@testing-library/user-event": "npm:^13.5.0"
     "@ton/core": "npm:0.54.0"
     "@ton/crypto": "npm:3.2.0"
-    "@ton/ton": "npm:13.9.0"
+    "@ton/ton": "https://github.com/tonkeeper/ton-lib"
     "@tonkeeper/core": "npm:0.1.0"
     "@tonkeeper/locales": "npm:0.1.0"
     "@tonkeeper/uikit": "npm:0.1.0"
@@ -6261,7 +6277,6 @@ __metadata:
     "@tanstack/react-query": "npm:4.3.4"
     "@ton/core": "npm:0.54.0"
     "@ton/crypto": "npm:3.2.0"
-    "@ton/ton": "npm:13.9.0"
     "@tonkeeper/core": "npm:0.1.0"
     "@types/country-list-js": "npm:^3.1.3"
     "@types/react": "npm:^18.0.26"

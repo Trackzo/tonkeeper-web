@@ -7,7 +7,8 @@ export enum WalletVersion {
     V3R1 = 0,
     V3R2 = 1,
     V4R1 = 2,
-    V4R2 = 3
+    V4R2 = 3,
+    V5 = 4
 }
 
 export const WalletVersions = [WalletVersion.V3R1, WalletVersion.V3R2, WalletVersion.V4R2];
