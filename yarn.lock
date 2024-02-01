@@ -6050,25 +6050,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ton/ton@https://github.com/tonkeeper/ton-lib":
+"@ton/ton@https://github.com/tonkeeper/tonkeeper-ton#tonkeeper":
   version: 13.9.0
-  resolution: "@ton/ton@https://github.com/tonkeeper/ton-lib.git#commit=117096738d7ebe00a6594b25cbf61e8f308b6081"
-  dependencies:
-    axios: "npm:^0.25.0"
-    dataloader: "npm:^2.0.0"
-    symbol.inspect: "npm:1.0.1"
-    teslabot: "npm:^1.3.0"
-    zod: "npm:^3.21.4"
-  peerDependencies:
-    ton-core: ">=0.53.0"
-    ton-crypto: ">=3.2.0"
-  checksum: 96620277448da0584274f30956af47ebccd07f06ae7df251159dcf9ffbd0b646560cc4b06fc03d3305df8acbfea03db59a76cefaf868ab234bec7eba3d7dacf7
-  languageName: node
-  linkType: hard
-
-"@ton/ton@https://github.com/tonkeeper/tonkeeper-ton":
-  version: 13.9.1
-  resolution: "@ton/ton@https://github.com/tonkeeper/tonkeeper-ton.git#commit=3d5ad0dfba4084428edc8d31c209a70d9c802cba"
+  resolution: "@ton/ton@https://github.com/tonkeeper/tonkeeper-ton.git#commit=74dfd3bf9d874db625797a1a83dd3b15c029c7c4"
   dependencies:
     axios: "npm:^0.25.0"
     dataloader: "npm:^2.0.0"
@@ -6078,7 +6062,7 @@ __metadata:
   peerDependencies:
     "@ton/core": ">=0.53.0"
     "@ton/crypto": ">=3.2.0"
-  checksum: f2ebaffe5cb73a86f546a02617b75b50d2729c5fdc17ab0d76396017170e602535dc4f254105da09eb31fdd142e2d0a3916eebb5b2be1a9486bfd8cf852c3865
+  checksum: 961c04b1e5229bd2880224bc704128d2caea53733ac7f3e4df40ef4a95602f589e4022f21bc8f0134cdeb3a63650be599d46a186cba1b95790db2f20c4f031df
   languageName: node
   linkType: hard
 
@@ -6088,7 +6072,7 @@ __metadata:
   dependencies:
     "@ton/core": "npm:0.54.0"
     "@ton/crypto": "npm:3.2.0"
-    "@ton/ton": "https://github.com/tonkeeper/tonkeeper-ton"
+    "@ton/ton": "https://github.com/tonkeeper/tonkeeper-ton#tonkeeper"
     bignumber.js: "npm:^9.1.1"
     ethers: "npm:^6.6.5"
     npm-run-all: "npm:^4.1.5"
@@ -6169,7 +6153,7 @@ __metadata:
     "@testing-library/user-event": "npm:^13.5.0"
     "@ton/core": "npm:0.54.0"
     "@ton/crypto": "npm:3.2.0"
-    "@ton/ton": "https://github.com/tonkeeper/ton-lib"
+    "@ton/ton": "https://github.com/tonkeeper/tonkeeper-ton#tonkeeper"
     "@tonkeeper/core": "npm:0.1.0"
     "@tonkeeper/locales": "npm:0.1.0"
     "@tonkeeper/uikit": "npm:0.1.0"
