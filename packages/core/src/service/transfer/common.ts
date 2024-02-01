@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js';
 import {
     Address,
     beginCell,
@@ -8,12 +7,13 @@ import {
     internal,
     storeMessage,
     toNano
-} from 'ton-core';
+} from '@ton/core';
+import BigNumber from 'bignumber.js';
 
-import { mnemonicToPrivateKey } from 'ton-crypto';
-import { WalletContractV3R1 } from 'ton/dist/wallets/WalletContractV3R1';
-import { WalletContractV3R2 } from 'ton/dist/wallets/WalletContractV3R2';
-import { WalletContractV4 } from 'ton/dist/wallets/WalletContractV4';
+import { mnemonicToPrivateKey } from '@ton/crypto';
+import { WalletContractV3R1 } from '@ton/ton/dist/wallets/WalletContractV3R1';
+import { WalletContractV3R2 } from '@ton/ton/dist/wallets/WalletContractV3R2';
+import { WalletContractV4 } from '@ton/ton/dist/wallets/WalletContractV4';
 import { APIConfig } from '../../entries/apis';
 import { WalletState } from '../../entries/wallet';
 import {

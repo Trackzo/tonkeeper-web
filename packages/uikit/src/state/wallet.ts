@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Address } from '@ton/core';
 import { NFT } from '@tonkeeper/core/dist/entries/nft';
 import { WalletState, WalletVersion, walletVersionText } from '@tonkeeper/core/dist/entries/wallet';
 import { accountLogOutWallet, getAccountState } from '@tonkeeper/core/dist/service/accountService';
@@ -17,7 +18,6 @@ import {
     WalletApi
 } from '@tonkeeper/core/dist/tonApiV2';
 import { isTONDNSDomain } from '@tonkeeper/core/dist/utils/nft';
-import { Address } from 'ton';
 import { useAppContext, useWalletContext } from '../hooks/appContext';
 import { useAppSdk } from '../hooks/appSdk';
 import { useStorage } from '../hooks/storage';

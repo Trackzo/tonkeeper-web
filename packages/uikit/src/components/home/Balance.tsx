@@ -1,20 +1,20 @@
 import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Address } from '@ton/core';
 import { CryptoCurrency } from '@tonkeeper/core/dist/entries/crypto';
 import { FiatCurrencies } from '@tonkeeper/core/dist/entries/fiat';
 import { shiftedDecimals } from '@tonkeeper/core/dist/utils/balance';
 import { formatAddress, toShortValue } from '@tonkeeper/core/dist/utils/common';
 import BigNumber from 'bignumber.js';
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import styled from 'styled-components';
-import { Address } from 'ton-core';
 import { useAppContext, useWalletContext } from '../../hooks/appContext';
 import { useAppSdk } from '../../hooks/appSdk';
 import { formatFiatCurrency } from '../../hooks/balance';
 import { useTranslation } from '../../hooks/translation';
 import { QueryKey } from '../../libs/queryKey';
 import { TokenRate, getRateKey } from '../../state/rates';
-import { SkeletonText } from '../shared/Skeleton';
 import { Body3, Label2, Num2 } from '../Text';
+import { SkeletonText } from '../shared/Skeleton';
 import { AssetData } from './Jettons';
 
 const Block = styled.div`
