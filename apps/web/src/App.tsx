@@ -73,6 +73,10 @@ const SendNftNotification = React.lazy(
     () => import('@tonkeeper/uikit/dist/components/transfer/nft/SendNftNotification')
 );
 
+const PairSignerNotification = React.lazy(
+    () => import('@tonkeeper/uikit/dist/components/PairSignerNotification')
+);
+
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -173,7 +177,12 @@ export const Loader: FC = () => {
     const { data: account } = useAccountState();
     const { data: auth } = useAuthState();
 
-    const tonendpoint = useTonendpoint(TARGET_ENV, sdk.version, activeWallet?.network, activeWallet?.lang);
+    const tonendpoint = useTonendpoint(
+        TARGET_ENV,
+        sdk.version,
+        activeWallet?.network,
+        activeWallet?.lang
+    );
     const { data: config } = useTonenpointConfig(tonendpoint);
 
     const navigate = useNavigate();
@@ -329,6 +338,7 @@ export const Content: FC<{
                     <SendNftNotification />
                     <AddFavoriteNotification />
                     <EditFavoriteNotification />
+                    <PairSignerNotification />
                 </Suspense>
             </WalletStateContext.Provider>
         </Wrapper>

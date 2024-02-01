@@ -702,6 +702,8 @@
   "setup_notifications_caption" : "Get notifications when you \n receive TON, tokens and NFTs.",
   "setup_notifications_enable_button" : "Enable notifications",
   "setup_notifications_title" : "Get instant notifications",
+  "signer_scan_result" : "Scan signed transaction",
+  "signer_scan_tx_description" : "Please open Signer and scan QR code with transaction",
   "skip" : "Skip",
   "spam_action" : "Spam",
   "staking" : {

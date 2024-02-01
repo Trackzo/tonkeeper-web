@@ -16,6 +16,7 @@ import { WalletContractV3R2 } from '@ton/ton/dist/wallets/WalletContractV3R2';
 import { WalletContractV4 } from '@ton/ton/dist/wallets/WalletContractV4';
 import { WalletContractV5 } from '@ton/ton/dist/wallets/WalletContractV5';
 import { APIConfig } from '../../entries/apis';
+import { Signer } from '../../entries/signer';
 import { WalletState } from '../../entries/wallet';
 import {
     Account,
@@ -120,7 +121,7 @@ export const createTransferMessage = async (
     wallet: {
         seqno: number;
         state: WalletState;
-        signer: (buffer: Buffer) => Promise<Buffer>;
+        signer: Signer;
     },
     transaction: {
         to: string;
@@ -150,16 +151,16 @@ export const createTransferMessage = async (
     return externalMessage(contract, wallet.seqno, transfer).toBoc();
 };
 
-export const signEstimateMessage = async (payloadToSign: Buffer): Promise<Buffer> => {
-    const signature = sign(payloadToSign, Buffer.alloc(64));
-    return signature;
+export const signEstimateMessage = async (message: Cell): Promise<Cell> => {
+    const signature = sign(message.hash(), Buffer.alloc(64));
+    return beginCell().storeBuffer(signature).storeBuilder(message.asBuilder()).endCell();
 };
 
 export const signByMnemonicOver = async (mnemonic: string[]) => {
-    return async (payloadToSign: Buffer): Promise<Buffer> => {
+    return async (message: Cell): Promise<Cell> => {
         const keyPair = await mnemonicToPrivateKey(mnemonic);
-        const signature = sign(payloadToSign, keyPair.secretKey);
-        return signature;
+        const signature = sign(message.hash(), keyPair.secretKey);
+        return beginCell().storeBuffer(signature).storeBuilder(message.asBuilder()).endCell();
     };
 };
 

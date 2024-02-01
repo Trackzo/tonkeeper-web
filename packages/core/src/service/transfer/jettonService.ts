@@ -4,6 +4,7 @@ import { APIConfig } from '../../entries/apis';
 import { AssetAmount } from '../../entries/crypto/asset/asset-amount';
 import { TonAsset } from '../../entries/crypto/asset/ton-asset';
 import { TonRecipientData } from '../../entries/send';
+import { Signer } from '../../entries/signer';
 import { WalletState } from '../../entries/wallet';
 import { BlockchainApi, EmulationApi, MessageConsequences } from '../../tonApiV2';
 import { walletContractFromState } from '../wallet/contractService';
@@ -48,7 +49,7 @@ const createJettonTransfer = async (
     amount: AssetAmount<TonAsset>,
     jettonWalletAddress: string,
     forwardPayload: Cell | null,
-    signer: (buffer: Buffer) => Promise<Buffer>
+    signer: Signer
 ) => {
     const jettonAmount = BigInt(amount.stringWeiAmount);
 
@@ -114,7 +115,7 @@ export const sendJettonTransfer = async (
     amount: AssetAmount<TonAsset>,
     jettonWalletAddress: string,
     fee: MessageConsequences,
-    signer: (buffer: Buffer) => Promise<Buffer>
+    signer: Signer
 ) => {
     await checkServiceTimeOrDie(api);
 

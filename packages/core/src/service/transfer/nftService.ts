@@ -2,6 +2,7 @@ import { Address, beginCell, Cell, comment, toNano } from '@ton/core';
 import BigNumber from 'bignumber.js';
 import { APIConfig } from '../../entries/apis';
 import { TonRecipientData } from '../../entries/send';
+import { Signer } from '../../entries/signer';
 import { WalletState } from '../../entries/wallet';
 import { BlockchainApi, EmulationApi, MessageConsequences, NftItem } from '../../tonApiV2';
 import {
@@ -69,7 +70,7 @@ const createNftTransfer = (
     nftAddress: string,
     nftTransferAmount: bigint,
     forwardPayload: Cell | null = null,
-    signer: (buffer: Buffer) => Promise<Buffer>
+    signer: Signer
 ) => {
     const body = nftTransferBody({
         queryId: Date.now(),
@@ -117,7 +118,7 @@ export const sendNftTransfer = async (
     recipient: TonRecipientData,
     nftItem: NftItem,
     fee: MessageConsequences,
-    signer: (buffer: Buffer) => Promise<Buffer>
+    signer: Signer
 ) => {
     await checkServiceTimeOrDie(api);
 
@@ -155,7 +156,7 @@ export const sendNftRenew = async (options: {
     walletState: WalletState;
     nftAddress: string;
     fee: MessageConsequences;
-    signer: (buffer: Buffer) => Promise<Buffer>;
+    signer: Signer;
     amount: BigNumber;
 }) => {
     const { seqno } = await getKeyPairAndSeqno(options);
@@ -206,7 +207,7 @@ export const sendNftLink = async (options: {
     nftAddress: string;
     linkToAddress: string;
     fee: MessageConsequences;
-    signer: (buffer: Buffer) => Promise<Buffer>;
+    signer: Signer;
     amount: BigNumber;
 }) => {
     const { seqno } = await getKeyPairAndSeqno(options);
