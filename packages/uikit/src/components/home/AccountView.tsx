@@ -14,6 +14,7 @@ import { FullHeightBlock, NotificationBlock, NotificationTitleRow } from '../Not
 import { Body1, H3 } from '../Text';
 import { Button } from '../fields/Button';
 import { Wrapper, childFactoryCreator, duration } from '../transfer/common';
+import { QrWrapper } from './qrCodeView';
 
 const CopyBlock = styled.div`
     display: flex;
@@ -48,12 +49,6 @@ export const Background = styled.div<{ extension?: boolean; margin?: boolean }>`
         height: 100% !important;
         position: absolute;
     }
-`;
-
-export const QrWrapper = styled.div`
-    width: 100%;
-    padding-bottom: 100%;
-    position: relative;
 `;
 
 export const AddressText = styled(Body1)<{ extension?: boolean }>`
